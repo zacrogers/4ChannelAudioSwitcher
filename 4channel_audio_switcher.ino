@@ -7,13 +7,29 @@
     MUX 3 = Led display
 */
 
-/* Pin defines */
-const uint8_t MUX_PINS[]    = {3, 4};
-const uint8_t BUTTON_PINS[] = {0, 2};
+#define NUM_CHANNELS 4
 
-/* States */
-uint8_t current_state = 0;
-uint8_t prev_state    = 0;
+/* Mux select pin indexes */
+enum class Select
+{
+    A = 0,
+    B = 1
+};
+
+/* Button pin define indexes */
+enum class BtnInd
+{
+    INCR = 0,
+    DECR = 1
+};
+
+/* Pin defines */
+const uint8_t MUX_PINS[2]    = {3, 4};
+const uint8_t BUTTON_PINS[2] = {0, 2};
+
+/* Channel States */
+uint8_t current_channel = 0;
+uint8_t prev_channel    = 0;
 
 void setup() 
 {
@@ -26,43 +42,46 @@ void setup()
 
 void loop() 
 {
-    read_button();
+    read_buttons();
 
-    if(prev_state != current_state)
+    if(prev_channel != current_channel)
     {
         channel_set();
     }
 }
 
-
-void read_button()
+/* Increment or decrement current channel */
+void read_buttons()
 {
-    if(digitalRead(BUTTON_PINS[0]) == HIGH)
+    if(digitalRead(BUTTON_PINS[BtnInd::INCR]) == HIGH)
     {
-        prev_state = current_state;
-        
-        if(current_state < 4)
+        prev_channel = current_channel;
+
+        if(current_channel < (NUM_CHANNELS - 1))
         {
-            current_state++;
+            current_channel++;
         }    
         delay(250);
     }    
-    
-    if(digitalRead(BUTTON_PINS[1]) == HIGH)
+
+    if(digitalRead(BUTTON_PINS[BtnInd::DECR]) == HIGH)
     {
-        prev_state = current_state;
-        
-        if(current_state > 0)
+        prev_channel = current_channel;
+
+        if(current_channel > 0)
         {
-            current_state--;
+            current_channel--;
         }
         delay(250);
     }     
 }
 
-void channel_set()
+void channel_set(void)
 {
-    switch(current_state)
+    digitalWrite(MUX_PINS[SELECT::A], (current_channel & (0x1 << 0)));  
+    digitalWrite(MUX_PINS[SELECT::B], (current_channel & (0x1 << 1)));      
+/*    
+    switch(current_channel)
     {
         case 0:
             digitalWrite(MUX_PINS[0], LOW);
@@ -84,4 +103,5 @@ void channel_set()
             digitalWrite(MUX_PINS[1], HIGH);
             break;    
     }    
+*/
 }
