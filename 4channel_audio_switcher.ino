@@ -53,7 +53,7 @@ void loop()
 /* Increment or decrement current channel */
 void read_buttons()
 {
-    if(digitalRead(BUTTON_PINS[BtnInd::INCR]) == HIGH)
+    if(digitalRead(BUTTON_PINS[(uint8_t)BtnInd::INCR]) == HIGH)
     {
         prev_channel = current_channel;
 
@@ -61,10 +61,10 @@ void read_buttons()
         {
             current_channel++;
         }    
-        delay(250);
+        delay(250); /* debounce */
     }    
 
-    if(digitalRead(BUTTON_PINS[BtnInd::DECR]) == HIGH)
+    if(digitalRead(BUTTON_PINS[(uint8_t)BtnInd::DECR]) == HIGH)
     {
         prev_channel = current_channel;
 
@@ -72,14 +72,14 @@ void read_buttons()
         {
             current_channel--;
         }
-        delay(250);
+        delay(250); /* debounce */
     }     
 }
 
 void channel_set(void)
 {
-    digitalWrite(MUX_PINS[SELECT::A], (current_channel & (0x1 << 0)));  
-    digitalWrite(MUX_PINS[SELECT::B], (current_channel & (0x1 << 1)));      
+    digitalWrite(MUX_PINS[(uint8_t)SELECT::A], (current_channel & (0x1 << 0)));  
+    digitalWrite(MUX_PINS[(uint8_t)SELECT::B], (current_channel & (0x1 << 1)));      
 /*    
     switch(current_channel)
     {
