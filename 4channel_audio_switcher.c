@@ -7,7 +7,7 @@
  * Author : Zac
  */ 
 
-#define F_CPU 1000000
+#define F_CPU 1000000 /* Clock speed for delay */
 
 #include <avr/io.h>
 #include <stdint.h>
