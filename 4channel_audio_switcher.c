@@ -16,6 +16,10 @@
 
 #define NUM_CHANNELS 4
 
+/* Attiny only has portb */
+#define PIN_SET(pin)    (PORTB |= (1U << pin))
+#define PIN_CLEAR(pin)  (PORTB &= ~(1U << pin))
+
 /* Function prototypes */
 void gpio_init(void);
 void poll_buttons(void);
@@ -84,11 +88,11 @@ void set_mux(void)
     {
         if(current_channel & (1U << pin))
         {
-            PORTB |= (1U << MUX_PIN[pin]);  /* Set pin */
+            PIN_SET(MUX_PIN[pin]);
         }
         else
         {
-            PORTB &= ~(1U << MUX_PIN[pin]);  /* Clear pin*/
+            PIN_CLEAR(MUX_PIN[pin]);
         }
     }
 }
